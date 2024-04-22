@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <title>Document</title>
+  <style>
+    html, body {
+      overflow: hidden; /* Prevent scrolling */
+      margin: 0; /* Remove default body margin */
+      padding: 0; /* Remove default body padding */
+    }
+
+    .photo-container {
+      position: relative;
+      width: 100vw; /* Full viewport width */
+      height: 100vh; /* Full viewport height */
+    }
+    .photo {
+      max-width: 30%; /* Set maximum width */
+      max-height: 30%; /* Set maximum height */
+      margin: 5px;
+      position: absolute;
+      opacity: 0;
+      animation: pop-in 3s infinite;
+    }
+
+    @keyframes pop-in {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0;
+      }
+    }
+
+    .text-container {
+      position: absolute;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      color: #ffffff; /* Text color */
+      animation: pop-out 5s infinite;
+    }
+
+    @keyframes pop-out {
+      0%, 100% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(45deg); /* Random rotation */
+      }
+    }
+
+    .background-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* Allow clicking through overlay */
+      z-index: -1; /* Ensure the overlay is behind other elements */
+      opacity: 0; /* Initially invisible */
+      transition: opacity 0.5s; /* Smooth transition */
+    }
+
+    .background-overlay.show {
+      opacity: 1; /* Make visible during popping */
+      background: linear-gradient(to right, violet, violet); /* Violet gradient */
+      animation: blink 3s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+    }
+    body{
+      background-color: #222222;
+    }
+    #button {
+      padding: 15px 20px; /* Padding */
+      background: linear-gradient(to right, violet, red); /* Violet gradient */
+      border: none;
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      outline: none;
+      border-radius: 30px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: aqua;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="background-overlay"></div>
+  <div>
+    <button id="button">
+      Hi mahal pakipindot
+    </button>
+  </div>
+  <div id="photo-container" class="photo-container" style="display: none;">
+    <!-- Photos will be populated here -->
+  </div>
+
+  <!-- Add audio element for music -->
+  <audio id="bgMusic" src="audiomass-output.mp3" preload="auto" loop></audio>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var button = document.getElementById("button");
+      var photoContainer = document.getElementById("photo-container");
+      var textContainer = document.createElement("div");
+      var backgroundOverlay = document.querySelector(".background-overlay");
+      var photoNames = [
+        "IMG_9644.JPG","download__2_-removebg-preview.png",
+        "IMG_9033.JPG",
+        "IMG_9019.JPG","images-removebg-preview.png",
+        "download__1_-removebg-preview (1).png",
+        "IMG_8810.JPG","images-removebg-preview.png",
+        "IMG_8979.JPG","download__2_-removebg-preview.png",
+        "IMG_8981.JPG",
+        "download__1_-removebg-preview.png",
+        "download__3_-removebg-preview.png",
+        "IMG_8656.JPG",
+        "download__1_-removebg-preview.png","images-removebg-preview.png",
+        "images-removebg-preview.png",
+        "IMG_8473.JPG","download__2_-removebg-preview.png",
+        "IMG_7301.JPG","images-removebg-preview.png",
+        "download__1_-removebg-preview (1).png",
+        "IMG_7300.JPG","images-removebg-preview.png","images-removebg-preview.png",
+        "IMG_6918.JPG","download-removebg-preview (1).png",
+        "IMG_6700.JPG","download__2_-removebg-preview.png","images-removebg-preview.png",
+        "IMG_6204.JPG","images-removebg-preview.png",
+        "download__1_-removebg-preview (1).png",
+        "IMG_6215.JPG","images-removebg-preview.png",
+        "IMG_6230.JPG","download__3_-removebg-preview.png","images-removebg-preview.png",
+        "IMG_5666.JPG",
+        "IMG_5469.JPG",        "download__1_-removebg-preview.png",
+
+        "IMG_4785.JPG","download-removebg-preview (1).png","images-removebg-preview.png",
+        "IMG_4722.JPG","download__3_-removebg-preview.png",
+        "IMG_4641.JPG","download-removebg-preview (1).png",
+        "IMG_4368.JPG","images-removebg-preview.png",
+        "IMG_4334.JPG","download-removebg-preview (1).png","images-removebg-preview.png",
+        "IMG_4188.JPG",        "download__1_-removebg-preview.png",
+        "download-removebg-preview.png",
+        "IMG_4155.JPG","images-removebg-preview.png",
+        "IMG_3379.JPG",  "download__2_-removebg-preview (1).png",
+        "IMG_3048.JPG","images-removebg-preview.png",
+        "IMG_1875.JPG","download-removebg-preview (1).png",
+        "IMG_1787.JPG","images-removebg-preview.png",
+        "IMG_1786.JPG",  "download__2_-removebg-preview (1).png",
+        "IMG_1409.JPG",
+        "IMG_1384.JPG","download-removebg-preview.png","images-removebg-preview.png",
+        "IMG_0594.JPG","download__2_-removebg-preview.png",
+        "IMG_0540.JPG",  "download__2_-removebg-preview (1).png",
+        "IMG_0437.JPG","images-removebg-preview.png",
+        "IMG_0172.JPG",
+        "images-removebg-preview.png"
+      ];
+
+      var clickCount = 0;
+
+      button.addEventListener("click", function() {
+        clickCount++;
+        if (clickCount === 1) {
+          button.innerHTML = "I love you click mo ulit";
+        } else if (clickCount === 2) {
+          button.style.display = "none"; // Hide the button after the second click
+          photoContainer.style.display = "block"; // Show the photo container
+          textContainer.setAttribute("class", "text-container");
+          textContainer.style.left = Math.random() * (window.innerWidth - 200) + "px";
+          textContainer.style.top = Math.random() * (window.innerHeight - 200) + "px";
+          document.body.appendChild(textContainer);
+          backgroundOverlay.classList.add("show"); // Show the violet gradient
+          document.body.style.backgroundColor = "#1a1a1a"; // Set background color dynamically
+
+          // Play the music
+          var bgMusic = document.getElementById("bgMusic");
+          bgMusic.play();
+
+          // Populate photo container sequentially with delay
+          photoNames.forEach(function(photoName, index) {
+            setTimeout(function() {
+              var img = document.createElement("img");
+              img.setAttribute("src", photoName);
+              img.setAttribute("class", "photo");
+              var maxLeft = window.innerWidth * 0.7; // 70% of viewport width
+              var maxTop = window.innerHeight * 0.7; // 70% of viewport height
+              var left = Math.random() * maxLeft;
+              var top = Math.random() * maxTop;
+              if (left + img.width > window.innerWidth) {
+                left = window.innerWidth - img.width;
+              }
+              if (top + img.height > window.innerHeight) {
+                top = window.innerHeight - img.height;
+              }
+              img.style.left = left + "px";
+              img.style.top = top + "px";
+              photoContainer.appendChild(img);
+            }, index * 100); // Each photo appears with a delay of 200ms
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
